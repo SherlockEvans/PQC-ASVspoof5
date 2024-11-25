@@ -66,44 +66,6 @@ def pad_random(x: np.ndarray, max_len: int = 64600):
     return padded_x
 
 
-class Dataset_ASVspoof2024_train_aug(Dataset):
-    def __init__(self, args, list_IDs, labels, base_dir, mask=False):
-        """self.list_IDs	: list of strings (each string: utt key),
-           self.labels      : dictionary (key: utt key, value: label integer)"""
-
-        self.args = args
-        self.list_IDs = list_IDs
-        self.labels = labels
-        self.base_dir = base_dir
-        self.mask = mask
-        self.aug_num = 0
-        self.cut = 64600  # take ~4 sec audio (64600 samples)
-
-    def __len__(self):
-        return len(self.list_IDs)*(self.aug_num + 1)
-
-    def __getitem__(self, index):
-        # print('index:', index)
-        f_idx = index // (self.aug_num + 1)
-
-        aug_id = index % (self.aug_num + 1)
-        print('aug_id:', aug_id)
-        utt_id = self.list_IDs[f_idx]
-        # X, fs = librosa.load(self.base_dir + 'flac/' + utt_id + '.flac', sr=16000)
-        # librosa.load读取时，如果 sr 缺省，librosa.load()会默认以22050的采样率读取音频文件，高于该采样率的音频文件会被下采样，低于该采样率的文件会被上采样。
-        # # 因此，如果希望以原始采样率读取音频文件，sr 应当设为 None。
-        X, fs = librosa.load(str(self.base_dir) + '/' + utt_id + '.wav', sr=16000)
-
-        Y = process_Rawboost_feature(X, fs, self.args, aug_id)
-        if self.mask:
-            Y=Y
-        X_pad = pad_random(Y, self.cut)
-        x_inp = Tensor(X_pad)
-        y = self.labels[utt_id]
-        # print('algo:', aug_id)
-        print(utt_id)
-        return x_inp, y, aug_id
-
 
 class Dataset_ASVspoof2024_train(Dataset):
     def __init__(self, args, list_IDs, labels, base_dir):
@@ -277,14 +239,10 @@ def process_Rawboost_feature(feature, sr, args, algo):
 
 
 
-# key='1234'
-# base_dir='aa/'
-# path=str(base_dir + f"flac/{key}.flac")
-# print(path)
 if __name__ == "__main__":
-    X, fs = librosa.load(r"E:\database\ASVspoof2019LA-Sim v1.0\LA_T_1000137.flac", sr=16000)
-    X3, fs3 = librosa.load(r"E:\database\ASVspoof2019LA-Sim v1.0\LA_T_1000137.flac")
-    X2, fs2 = sf.read(r"E:\database\ASVspoof2019LA-Sim v1.0\LA_T_1000137.flac")
+    X, fs = librosa.load(r"E:\xxxx\xxx.flac", sr=16000)
+    X3, fs3 = librosa.load(r"E:\xxxx\xxx.flac")
+    X2, fs2 = sf.read(r"E:\xxxx\xxx.flac")
 
     # print(fs, fs3, fs2)
 
