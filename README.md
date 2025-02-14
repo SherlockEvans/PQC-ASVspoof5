@@ -3,4 +3,4 @@ To view the complete ML-KEM algorithm, you can refer to this website: https://gi
 
 
 
-When using this network model, replace the network/model.py in AASIST.（AASIST could be found at： https://github.com/asvspoof-challenge/asvspoof5）.
+
